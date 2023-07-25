@@ -15,9 +15,17 @@ export const Home = () => {
         for( var i = 1; i < 50; i++) {
             endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`);
         }
-        var response = axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res) => setPokemons(res));
-        return response
+        axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res) => setPokemons(res));
     };
+
+    const pokemonFilter = () => {
+        var filteredPokemons = []
+        for (var i in pokemons) {
+            if(pokemons[i].name.include(name)) {
+                filteredPokemons.push(pokemon[i]);
+            }
+        }
+    }
     
     return (
         <div>
