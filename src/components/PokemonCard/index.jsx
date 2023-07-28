@@ -21,7 +21,7 @@ export default function PokemonCard({ name, image, types }) {
           component="img"
           height="200"
           image={image}
-          alt="green iguana"
+          alt={name}
         />
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
