@@ -3,48 +3,59 @@ import Navbar from '../components/Navbar';
 import axios from "axios";
 import PokemonCard from '../components/PokemonCard';
 import { Skeletons } from "../components/Skeletons";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Box } from "@mui/material";
+import Typography from '@mui/material/Typography';
 
 export const Home = () => {
-    const [pokemons, setPokemons] = useState([]);
+    const [allPokemons, setAllPokemons] = useState([]);
+    const [filterName, setFilterName] = useState('');
+
     useEffect(() => {
-        getPokemons();
+        getAllPokemons();
     }, []);
 
-    const getPokemons = () => {
-        var endpoints = [];
-        for (var i = 1; i < 200; i++) {
-            endpoints.push(`https://pokeapi.co/api/v2/pokemon/${i}/`);
+    const getAllPokemons = async () => {
+        try {
+            const endpoints = Array.from({ length: 200 }, (_, index) => `https://pokeapi.co/api/v2/pokemon/${index + 1}/`);
+            const responses = await axios.all(endpoints.map((endpoint) => axios.get(endpoint)));
+            const pokemonData = responses.map((res) => res.data);
+            setAllPokemons(pokemonData);
+        } catch (error) {
+            console.error('Error fetching pokemons:', error);
         }
-        axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((res) => setPokemons(res));
     };
 
-    const pokemonFilter = (name) => {
-        var filteredPokemons = []
-        if (name === "") {
-            getPokemons();
-        }
-        for (var i in pokemons) {
-            if (pokemons[i].data.name.includes(name.toLowerCase())) {
-                filteredPokemons.push(pokemons[i]);
-            }
-        }
-        setPokemons(filteredPokemons);
-    }
+    const handleFilterChange = (name) => {
+        setFilterName(name.toLowerCase());
+    };
+
+    const filteredPokemons = allPokemons.filter((pokemon) => pokemon.name.includes(filterName));
 
     return (
         <div>
-            <Navbar pokemonFilter={pokemonFilter} />
+            <Navbar pokemonFilter={handleFilterChange} />
             <Container maxWidth="xl">
                 <Grid container spacing={3}>
-                    {pokemons.length === 0 ? ( 
+                    {allPokemons.length === 0 ? (
                         <Skeletons />
-                     ) : (
-                        pokemons.map((pokemon, key) => (
-                            <Grid item xs={12} sm={6} md={4} lg={2} key={key}>
-                                <PokemonCard name={pokemon.data.name} image={pokemon.data.sprites.front_default} types={pokemon.data.types} />
-                            </Grid>
-                        ))
+                    ) : (
+                        filteredPokemons.length === 0 ? (
+                            <Box display="flex" justifyContent="center" alignItems="center" height="30vh" width="100vw">
+                                <Typography gutterBottom variant="h3" component="div">
+                                    No pokemons found
+                                </Typography>
+                            </Box>
+                        ) : (
+                            filteredPokemons.map((pokemon, key) => (
+                                <Grid item xs={12} sm={6} md={4} lg={2} key={key}>
+                                    <PokemonCard
+                                        name={pokemon.name}
+                                        image={pokemon.sprites.front_default}
+                                        types={pokemon.types}
+                                    />
+                                </Grid>
+                            ))
+                        )
                     )}
                 </Grid>
             </Container>
