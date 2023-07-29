@@ -25,10 +25,10 @@ export default function PokemonCard({ name, image, types }) {
         />
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography gutterBottom variant="h5" component="div">
+            <Typography gutterBottom variant="h5" component="div" sx={{textTransform: 'capitalize'}}>
               {name}
             </Typography>
-            <Typography gutterBottom variant="caption" component="div">
+            <Typography gutterBottom variant="caption" component="div" sx={{textTransform: 'capitalize'}}>
               {typeHandler()}
             </Typography>
           </Box>
