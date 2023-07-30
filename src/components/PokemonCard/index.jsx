@@ -19,16 +19,17 @@ export default function PokemonCard({ name, image, types }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          height="200"
+          height="140"
           image={image}
           alt={name}
+          sx={{objectFit: "contain"}}
         />
         <CardContent>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography gutterBottom variant="h5" component="div" sx={{textTransform: 'capitalize'}}>
+          <Box display="inline" alignItems="center">
+            <Typography gutterBottom variant="h5" component="div" sx={{textTransform: 'capitalize', textAlign:"center", margin:"0"}}>
               {name}
             </Typography>
-            <Typography gutterBottom variant="caption" component="div" sx={{textTransform: 'capitalize'}}>
+            <Typography gutterBottom variant="caption" component="div" sx={{textTransform: 'capitalize', textAlign:"center", margin:"0"}}>
               {typeHandler()}
             </Typography>
           </Box>

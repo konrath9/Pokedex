@@ -3,12 +3,14 @@ import Navbar from '../components/Navbar';
 import axios from "axios";
 import PokemonCard from '../components/PokemonCard';
 import { Skeletons } from "../components/Skeletons";
-import { Container, Grid, Box } from "@mui/material";
+import { Container, Grid, Box, Pagination } from "@mui/material";
 import Typography from '@mui/material/Typography';
 
 export const Home = () => {
     const [allPokemons, setAllPokemons] = useState([]);
     const [filterName, setFilterName] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const pokemonsPerPage = 18;
 
     useEffect(() => {
         getAllPokemons();
@@ -27,14 +29,22 @@ export const Home = () => {
 
     const handleFilterChange = (name) => {
         setFilterName(name.toLowerCase());
+        setCurrentPage(1);
     };
 
     const filteredPokemons = allPokemons.filter((pokemon) => pokemon.name.includes(filterName));
 
+    // Calcular a fatia de pokémons a ser exibida na página atual
+    const indexOfLastPokemon = currentPage * pokemonsPerPage;
+    const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
+    const currentPokemons = filteredPokemons.slice(indexOfFirstPokemon, indexOfLastPokemon);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div>
             <Navbar pokemonFilter={handleFilterChange} />
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{ backgroundColor:"rgba(200, 0, 0, 50%)", borderRadius:"10px", padding:"2em 1em 1em 1em"}}>
                 <Grid container spacing={3}>
                     {allPokemons.length === 0 ? (
                         <Skeletons />
@@ -46,7 +56,7 @@ export const Home = () => {
                                 </Typography>
                             </Box>
                         ) : (
-                            filteredPokemons.map((pokemon, key) => (
+                            currentPokemons.map((pokemon, key) => (
                                 <Grid item xs={12} sm={6} md={4} lg={2} key={key}>
                                     <PokemonCard
                                         name={pokemon.name}
@@ -58,6 +68,17 @@ export const Home = () => {
                         )
                     )}
                 </Grid>
+                <Box display="flex" justifyContent="center" marginTop={2}>
+                    {filteredPokemons.length > pokemonsPerPage && (
+                        <Pagination
+                            count={Math.ceil(filteredPokemons.length / pokemonsPerPage)}
+                            variant="outlined" shape="rounded"
+                            page={currentPage}
+                            onChange={(event, page) => paginate(page)}
+                            sx={{backgroundColor:"white", borderRadius:"0.3em", padding:"0.3em 0.2em"}}
+                        />
+                    )}
+                </Box>
             </Container>
         </div>
     )
