@@ -10,7 +10,7 @@ export const Home = () => {
     const [allPokemons, setAllPokemons] = useState([]);
     const [filterName, setFilterName] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const pokemonsPerPage = 18;
+    const pokemonsPerPage = 12;
 
     useEffect(() => {
         getAllPokemons();
@@ -44,7 +44,7 @@ export const Home = () => {
     return (
         <div>
             <Navbar pokemonFilter={handleFilterChange} />
-            <Container maxWidth="xl" sx={{ backgroundColor:"rgba(200, 0, 0, 50%)", borderRadius:"10px", padding:"2em 1em 1em 1em"}}>
+            <Container maxWidth="lg" sx={{ backgroundColor:"rgba(200, 0, 0, 50%)", borderRadius:"10px", padding:"2em 1em 1em 1em"}}>
                 <Grid container spacing={3}>
                     {allPokemons.length === 0 ? (
                         <Skeletons />
@@ -57,10 +57,10 @@ export const Home = () => {
                             </Box>
                         ) : (
                             currentPokemons.map((pokemon, key) => (
-                                <Grid item xs={12} sm={6} md={4} lg={2} key={key}>
+                                <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
                                     <PokemonCard
                                         name={pokemon.name}
-                                        image={pokemon.sprites.front_default}
+                                        image={pokemon.sprites.other["official-artwork"].front_default}
                                         types={pokemon.types}
                                     />
                                 </Grid>
