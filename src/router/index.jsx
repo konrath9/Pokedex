@@ -1,9 +1,9 @@
 import React from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Home } from '../pages/Home';
-import { Home } from '../pages/Profile';
+import { Profile } from '../pages/Profile';
 
-export const name = (props) => {
+export const Router = (props) => {
   return (
     <BrowserRouter>
       <Routes>
